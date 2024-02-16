@@ -153,8 +153,25 @@
         )
         ~~~
     3. APIの種類とモデル  
-    
-    
+    - ChatCompletionの詳しい使い方  
+    プロンプトの実行  
+        ~~~
+        openaai.ChatCompletion.create(
+            model='gpt-3.5-turbo,
+            messages=[{'role': 'user', 'content': 'プロンプト'}],
+            temperature=1.0
+        )
+        ~~~
+        temperatureはランダム性を制御するパラメータで、1.0が中央値、0に近づくほどランダム性が低くなり、2に近づくほどランダム性が高くなる  
+        APIの呼び出しはその都度リセットされるため、会話をするためにはそれまでの会話を全て指定する必要がある  
+
+        |role|設定|
+        |:---|:---|
+        |system|役割の設定等、どの立場で応答を返すかを指定|
+        |user|ChatGPTに対するユーザーの入力を指定|
+        |assistant|ChatGPTからの出力を指定|
+
+    4. ChatGPTを使ってゲームを作ろう   
 
 
 
