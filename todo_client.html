@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoリスト</title>
+</head>
+<body>
+    <!-- ToDoリストのタイトル -->
+    <h1>ToDoリスト</h1>
+
+    <!-- 新しいタスクを入力するためのテキストボックス -->
+    <input type="text" id="new-task" placeholder="新しいタスク">
+
+    <!-- タスクを追加するボタン -->
+    <button id="add-task">追加</button>
+
+    <!-- 追加されたタスクを表示するリスト -->
+    <ul id="todo-list"></ul>
+
+    <script>
+        // "追加"ボタンがクリックされたときの処理を定義
+        document.getElementById('add-task').onclick = async function() {
+            // テキストボックスからタスクのテキストを取得
+            const taskText = document.getElementById('new-task').value;
+            
+            // テキストが空白の場合は何もしない
+            if (taskText.trim() === '') return;
+
+            // サーバーに新しいタスクを追加するリクエストを送信
+            await fetch('/add_task', {
+                method: 'POST', // HTTPメソッドはPOST
+                headers: {'Content-Type': 'application/json'}, // コンテンツタイプはJSON
+                body: JSON.stringify({task: taskText}) // 送信するデータ
+            });
+
+            // テキストボックスをクリア
+            document.getElementById('new-task').value = '';
+            
+            // タスクリストを再読み込み
+            loadTasks();
+        };
+
+        // サーバーからタスクリストを取得して表示する関数
+        async function loadTasks() {
+            // サーバーからタスク一覧を取得
+            const response = await fetch('/get_tasks');
+            const tasks = await response.json();
+
+            // タスク一覧を表示する要素を取得
+            const listElement = document.getElementById('todo-list');
+            listElement.innerHTML = ''; // 既存のリストをクリア
+
+            // 取得したタスク一覧をリストに追加
+            tasks.forEach(task => {
+                const listItem = document.createElement('li'); // リストアイテムを作成
+                listItem.textContent = task; // テキストを設定
+                listElement.appendChild(listItem); // リストに追加
+            });
+        }
+
+        // 初期化処理としてタスクを読み込む
+        loadTasks();
+    </script>
+</body>
+</html>

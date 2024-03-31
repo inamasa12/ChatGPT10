@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoリスト</title>
+    <style>
+        .todo-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .todo-list li {
+            margin: 10px 0;
+        }
+
+        .delete-btn {
+            margin-left: 20px;
+            color: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>ToDoリスト</h1>
+    <input type="text" id="new-task" placeholder="新しいタスク">
+    <button id="add-task">追加</button>
+    <ul id="todo-list" class="todo-list"></ul>
+
+    <script>
+        document.getElementById('add-task').onclick = function() {
+            var taskText = document.getElementById('new-task').value;
+            if (taskText.trim() === '') return;
+
+            var listItem = document.createElement('li');
+            listItem.textContent = taskText;
+
+            var deleteBtn = document.createElement('span');
+            deleteBtn.textContent = '削除';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.onclick = function() {
+                listItem.remove();
+            };
+
+            listItem.appendChild(deleteBtn);
+            document.getElementById('todo-list').appendChild(listItem);
+
+            document.getElementById('new-task').value = ''; // 入力フィールドをクリア
+        };
+    </script>
+</body>
+</html>
