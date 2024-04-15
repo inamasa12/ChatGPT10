@@ -5,3 +5,6 @@ book-generativeai-sample-main*
 kagoya_vps.key
 Memo.txt
 Memo2.txt
+_pychache_
+.pytest_cache
+test.sqlite

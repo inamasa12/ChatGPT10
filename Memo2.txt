@@ -21,3 +21,134 @@ ToDoの追加、変更、削除などの操作が可能です。
 アプリの設定を変更することができます。
 ChatGPT APIの設定、通知設定などが含まれます。
 
+
+python sqlite_tool.py test.sqlite
+
+
+ChatGPTで作成したテーブル
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, /* タスクの一意識別子。自動で値が増加します。 */
+    title TEXT NOT NULL, /* タスクのタイトル。NULLを許容しません。 */
+    description TEXT, /* タスクの詳細説明。NULLを許容します。 */
+    due_date DATE, /* タスクの期限。日付形式で保存されます。NULLを許容します。 */
+    status TEXT NOT NULL DEFAULT '未完了', /* タスクの状態。デフォルトは「未完了」です。 */
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, /* タスクが作成された日時。デフォルトで現在のタイムスタンプが設定されます。 */
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP /* タスクが最後に更新された日時。デフォルトで現在のタイムスタンプが設定されます。 */
+);
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT '未完了');
+
+COMMIT; で確定
+
+
+-- usersテーブルの作成
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    created_at DATETIME NOT NULL
+);
+
+
+-- tasksテーブルの作成
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL,
+    priority INTEGER NOT NULL,
+    created_at DATETIME NOT NULL,
+    due_date DATETIME NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
+
+
+あなたは、優秀なソフトウェアのマニュアル作成者です。
+以下のSQLを説明するER図（erDiagram）をmermaid記法で記述してください。
+なお、図にはカラムのコメントも含めて下さい。
+
+'''
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    created_at DATETIME NOT NULL
+);
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL,
+    priority INTEGER NOT NULL,
+    created_at DATETIME NOT NULL,
+    due_date DATETIME NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+'''
+
+
+
+あなたはソフトウェアの優秀なテスターです。
+以下のテーブルに基づいて日本語のサンプルデータを10件生成してSQLで出力してください。
+'''
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL,
+    priority INTEGER NOT NULL,
+    created_at DATETIME NOT NULL,
+    due_date DATETIME NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+'''
+
+あなたは優秀なデータベースデザイナーです。
+次のようなテーブルをSQLで設計しました。
+指定したユーザーのタスク一覧をユーザーの名前入りで抽出するSQLite用のSQLを作成してください。
+'''
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    created_at DATETIME NOT NULL
+);
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL,
+    priority INTEGER NOT NULL,
+    created_at DATETIME NOT NULL,
+    due_date DATETIME NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+'''
+SELECT 
+    u.username,
+    t.title,
+    t.description,
+    t.status,
+    t.priority,
+    t.created_at,
+    t.due_date
+FROM 
+    tasks AS t
+JOIN 
+    users AS u ON t.user_id = u.id
+WHERE 
+    u.id = 1
+ORDER BY 
+    t.created_at DESC;
