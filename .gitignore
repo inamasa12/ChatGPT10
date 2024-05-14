@@ -9,3 +9,4 @@ _pychache_
 .pytest_cache
 test.sqlite
 Memo.xlsx
+.chroma
