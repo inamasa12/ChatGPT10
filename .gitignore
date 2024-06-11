@@ -11,3 +11,5 @@ test.sqlite
 Memo.xlsx
 .chroma
 AutoGPT-0.4.0
+_pycache_
+
