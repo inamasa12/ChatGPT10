@@ -334,6 +334,90 @@
     要約用プロンプトの作成（要約手法の選択）  
 
     3. 自立駆動型のAIエージェント（AGI）
+    - 汎用人工知能（Artificial General Intelligence）  
+    様々な分野の知識を有し、人間同等の知性と認識能力、感性、思考回路を持つ人工知能  
+    汎用人工知能を目標としたLLMと他のツールを組み合わせを「自立駆動型AIエージェント」と呼ぶ  
+    推論、行動、観察を繰り返し、タスクを実行する仕組みをReAct（Synergizing Reasoning and Acting in Language Models）と呼ぶ  
+    Auto-GPT、BabyAGIといった実行コードに加え、AgentGPTのようなWEBサービスもある  
+
+    4. 大規模言語モデルのファインチューニング  
+    - ファインチューニングのメリット  
+    複雑なプロンプト作成が不要  
+    カスタマイズのレベルが高い  
+    プロンプトのサイズを小さくできる  
+    - ファインチューニングのデメリット  
+    ファインチューニングしたモデルの利用は高価  
+    作成自体にもコストを要する  
+    - JSONL形式の学習用データを作成  
+        ~~~
+        {"prompt: "プロンプト", "completion"; "応答"}
+        {"prompt: "プロンプト", "completion"; "応答"}
+        {"prompt: "プロンプト", "completion"; "応答"}
+        ~~~
+    - ファインチューン  
+        ~~~
+        openai api fine_tunescreate -t "***.jsonl", -m davinci
+        ~~~
+    - モデルの使用  
+    従来同様  
+    チューニングしたモデルを指定する  
+
+    5. Function Callingを使って自然言語で操作するToDOアプリを作ろう  
+    プロンプト入力した文章を判断し、内容に応じて必要な情報を抽出してJSONで返す  
+    各内容で実行すべき関数を定義すれば、プロンプトに応じた処理を実行するシステムを簡単に構築できる  
+    出力フォーマットの安定化が目的  
+        
+    - 使用例  
+    入力を自然言語としたマルチ処理システム  
+    タスク管理、各ロボットや工作機械のコントロール等  
+    
+    - 使用方法  
+    ~~~
+    # 用途及び出力するJSONの定義
+    functions = [ # 複数の関数が指定可能
+                    {
+                        # 関数の名前と機能説明を指定
+                        'name': 'order_menu',
+                        'description': '料理を注文する',
+                        # どんな情報が必要かパラメータを指定
+                        'parameters': {
+                            'type': 'object',
+                            # 料理名と配達時間の詳細を指定
+                            'properties': {
+                                'menu': {
+                                    'type': 'string',
+                                    'description': '料理名'
+                                },
+                                'time': {
+                                    'type': 'string', 
+                                    'format': 'time', 
+                                    'description': '配達時間'
+                                }
+                            }
+                        }
+                    }
+                ]
+
+    # 入力となるプロンプト
+    messages = [
+    {
+        'role': 'system', # システムの役割を指定
+        'content': 'あなたはデリバリーで料理の注文を受ける優秀なウェイトレスです。'
+    },
+    {
+        'role': 'user', # 入力文
+        'content': 'お昼にチーズバーガーが食べたい。よろしく。'
+    }
+    ]
+    # Function Callingの実行
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo-0613'l, 
+        messages=messages,
+        functions=functions,
+        function_call='auto')
+    ~~~  
+
+
     
 
 
